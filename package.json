@@ -1,0 +1,28 @@
+{
+  "name": "my-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "build:rust": "cd rust/contracts && stellar contract build",
+    "test:rust": "cd rust/contracts && cargo test",
+    "clean:rust": "cd rust/contracts && cargo clean"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "turbo": "^2.4.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
