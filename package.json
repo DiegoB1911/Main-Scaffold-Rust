@@ -16,13 +16,28 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build:rust": "cd rust/contracts && stellar contract build",
     "test:rust": "cd rust/contracts && cargo test",
-    "clean:rust": "cd rust/contracts && cargo clean"
+    "clean:rust": "cd rust/contracts && cargo clean",
+    "deploy:local": "cd rust/contracts && stellar contract deploy --network standalone",
+    "deploy:testnet": "cd rust/contracts && stellar contract deploy --network testnet",
+    "deploy:futurenet": "cd rust/contracts && stellar contract deploy --network futurenet",
+    "soroban:install": "curl -sSL https://soroban.stellar.org/install | sh"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.68.0",
     "prettier": "^3.1.0",
     "turbo": "^2.4.4"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@stellar/design-system": "^3.1.0",
+    "@stellar/freighter-api": "^4.1.0",
+    "@stellar/stellar-sdk": "^12.3.0",
+    "@tanstack/react-query": "^5.69.0",
+    "immer": "^10.1.1",
+    "zustand": "^5.0.3",
+    "zustand-persist": "^0.4.0",
+    "zustand-querystring": "^0.2.0"
   }
 }

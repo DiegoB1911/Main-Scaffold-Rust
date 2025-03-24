@@ -2,21 +2,49 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
-import { useState } from "react"
+import { Menu, Wallet, X } from "lucide-react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useWallet } from "@/hooks/use-wallet"
+import { Badge } from "./ui/badge"
 
 const navigation = [
   { name: "Templates", href: "/templates" },
   { name: "Dashboard", href: "/dashboard" },
   { name: "Docs", href: "/docs" },
   { name: "Pricing", href: "/pricing" },
+  { name: "Deploy", href: "/deploy-contract" },
 ]
 
 export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { isConnected, publicKey, connect, disconnect } = useWallet();
+
+  useEffect(() => {
+    console.log("Wallet connection state changed:", isConnected);
+    console.log("Public key:", publicKey);
+  }, [isConnected, publicKey]);
+
+  const handleWalletClick = async () => {
+    try {
+      if (isConnected) {
+        console.log("Disconnecting wallet...");
+        await disconnect();
+      } else {
+        console.log("Connecting wallet...");
+        await connect();
+      }
+    } catch (error) {
+      console.error("Error managing wallet connection:", error);
+    }
+  };
+
+  const formatPublicKey = (key: string | undefined) => {
+    if (!key) return '';
+    return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,6 +70,20 @@ export function SiteHeader() {
         <div className="flex flex-1 items-center justify-end gap-x-4">
           <div className="hidden md:flex md:items-center md:gap-x-4">
             <ThemeToggle />
+            
+            {/* Wallet Connect Button */}
+            {isConnected ? (
+              <Badge variant="outline" className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-muted transition-colors" onClick={handleWalletClick}>
+                <Wallet className="h-4 w-4 text-green-500" />
+                <span>{formatPublicKey(publicKey)}</span>
+              </Badge>
+            ) : (
+              <Button variant="outline" size="sm" onClick={handleWalletClick} className="hover:border-primary">
+                <Wallet className="h-4 w-4 mr-2" />
+                Connect Wallet
+              </Button>
+            )}
+            
             <Button variant="outline" size="sm" asChild>
               <Link href="/login">Sign In</Link>
             </Button>
@@ -76,6 +118,26 @@ export function SiteHeader() {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Wallet Connect Button (Mobile) */}
+            {isConnected ? (
+              <div className="py-2 text-base font-medium">
+                <Badge variant="outline" className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-muted transition-colors" onClick={handleWalletClick}>
+                  <Wallet className="h-4 w-4 text-green-500" />
+                  <span>{formatPublicKey(publicKey)}</span>
+                </Badge>
+              </div>
+            ) : (
+              <Button 
+                variant="outline" 
+                onClick={handleWalletClick}
+                className="w-full mt-2 mb-2 hover:border-primary"
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                Connect Wallet
+              </Button>
+            )}
+            
             <div className="flex flex-col gap-2 pt-4">
               <Button variant="outline" asChild>
                 <Link href="/login">Sign In</Link>
