@@ -1,5 +1,6 @@
 import type React from "react"
 import { Inter } from "next/font/google"
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
@@ -8,9 +9,9 @@ import "@/app/globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Scaffold RUST - The Vercel-Like Platform for Stellar Smart Contracts",
+  title: "Scaffold RUST - The Platform for Stellar Smart Contracts",
   description: "Build, test, and deploy smart contracts on the Stellar blockchain using Rust",
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -28,11 +29,8 @@ export default function RootLayout({
             <SiteFooter />
           </div>
         </ThemeProvider>
+        <GoogleAnalytics gaId="G-7S99TQ46SJ" />
       </body>
     </html>
   )
 }
-
-
-
-import './globals.css'
