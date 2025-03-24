@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { SettingsTabs } from "@/components/settings-tabs"
 
@@ -12,7 +13,9 @@ export default function SettingsPage() {
             <p className="text-muted-foreground">Manage your account settings and preferences</p>
           </div>
 
-          <SettingsTabs />
+          <Suspense fallback={<div>Loading settings...</div>}>
+            <SettingsTabs />
+          </Suspense>
         </main>
       </div>
     </div>
