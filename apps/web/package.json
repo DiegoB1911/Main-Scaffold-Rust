@@ -11,7 +11,7 @@
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "^1.7.3",
     "@hookform/resolvers": "latest",
-    "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.2",
@@ -41,7 +41,6 @@
     "@stellar/freighter-api": "^4.1.0",
     "@stellar/stellar-sdk": "^12.3.0",
     "autoprefixer": "^10.4.20",
-    "chart.js": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
@@ -64,8 +63,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
     "zod": "latest",
-    "zustand": "^5.0.3",
-    "zustand-querystring": "^0.2.0"
+    "chart.js": "latest"
   },
   "devDependencies": {
     "@types/node": "^22.13.11",

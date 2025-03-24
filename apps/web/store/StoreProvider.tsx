@@ -1,13 +1,14 @@
 "use client";
 
-import { createContext, type ReactNode, useState } from "react";
+import { createContext, type ReactNode, useState, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { createStore } from "@/store/createStore";
 
 export type StoreType = ReturnType<typeof createStore>;
 export const ZustandContext = createContext<StoreType | null>(null);
 
-export const StoreProvider = ({ children }: { children: ReactNode }) => {
+// Componente interno que usa useSearchParams
+function StoreProviderInner({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const url = `${pathname}?${searchParams}`;
@@ -20,5 +21,14 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ZustandContext.Provider value={store}>{children}</ZustandContext.Provider>
+  );
+}
+
+// Componente envoltorio con Suspense
+export const StoreProvider = ({ children }: { children: ReactNode }) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <StoreProviderInner>{children}</StoreProviderInner>
+    </Suspense>
   );
 };
