@@ -24,14 +24,15 @@
     transition: background-color var(--sds-anim-transition-default);
     padding: var(--NetworkSelector-padding-vertical)
       var(--NetworkSelector-padding-horizontal);
-    background-color: var(--NetworkSelector-color-background-default);
-    border: 1px solid var(--NetworkSelector-color-border);
+    background-color: #252525;
+    border: 1px solid #3a3a3a;
     border-radius: var(--NetworkSelector-border-radius);
     cursor: pointer;
 
     @media (hover: hover) {
       &:hover {
-        background-color: var(--NetworkSelector-color-background-hover);
+        background-color: #2a2a2a;
+        border-color: #4a4a4a;
       }
     }
 
@@ -39,11 +40,25 @@
       display: block;
       width: pxToRem(14px);
       height: pxToRem(14px);
-      stroke: var(--sds-clr-gray-09);
+      stroke: #ffffff;
     }
 
     .NetworkIndicator {
       font-weight: var(--sds-fw-semi-bold);
+      color: #ffffff;
+    }
+    
+    .chevron-icon {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      svg {
+        width: pxToRem(16px);
+        height: pxToRem(16px);
+        stroke: #ffffff;
+      }
     }
   }
 
@@ -58,6 +73,10 @@
     display: none;
     opacity: 0;
     min-width: pxToRem(360px);
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: pxToRem(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 
     &[data-is-active="true"] {
       display: block;
@@ -78,7 +97,8 @@
 
   // Body
   &__body {
-    padding: pxToRem(4px);
+    padding: pxToRem(8px);
+    color: #ffffff;
 
     &__links {
       display: flex;
@@ -91,27 +111,28 @@
       align-items: center;
       justify-content: space-between;
       gap: pxToRem(24px);
-      padding: pxToRem(6px) pxToRem(8px);
+      padding: pxToRem(8px) pxToRem(10px);
       cursor: pointer;
       background-color: transparent;
       border-radius: pxToRem(4px);
       transition: background-color var(--sds-anim-transition-default);
+      color: #ffffff;
 
       @media (hover: hover) {
         &:hover {
-          background-color: var(--sds-clr-gray-03);
+          background-color: #2a2a2a;
         }
       }
 
       &[data-is-active="true"] {
-        background-color: var(--sds-clr-gray-03);
+        background-color: #2d7ff9;
         cursor: default;
       }
 
       &__note {
         font-size: pxToRem(12px);
         line-height: pxToRem(18px);
-        color: var(--sds-clr-gray-11);
+        color: #ffffff;
         font-weight: var(--sds-fw-medium);
         text-wrap: nowrap;
         text-align: right;
@@ -130,10 +151,26 @@
         display: flex;
         flex-direction: column;
         gap: pxToRem(12px);
-        background-color: var(--sds-clr-gray-01);
+        background-color: #252525;
         border-radius: pxToRem(6px);
-        border: 1px solid var(--sds-clr-gray-06);
+        border: 1px solid #3a3a3a;
         padding: pxToRem(12px);
+        
+        button {
+          background-color: #2d7ff9;
+          color: white;
+          border: none;
+          transition: background-color 0.2s;
+          
+          &:hover:not(:disabled) {
+            background-color: #1a6fd8;
+          }
+          
+          &:disabled {
+            background-color: #3a3a3a;
+            color: #888888;
+          }
+        }
       }
     }
   }

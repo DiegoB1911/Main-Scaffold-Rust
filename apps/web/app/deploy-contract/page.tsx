@@ -172,28 +172,38 @@ export default function DeployContractPage() {
               <Globe size={16} />
               <span>Network</span>
             </label>
-            <Select
-              id="network-select"
-              value={selectedNetwork}
-              onChange={(e) => setSelectedNetwork(e.target.value as NetworkType)}
-              fieldSize="lg"
-            >
-              <option value="testnet">Testnet (Test Network)</option>
-              <option value="futurenet">Futurenet (Development)</option>
-              <option value="mainnet">Mainnet (Production)</option>
-            </Select>
+            <div className="select-container">
+              <select
+                id="network-select"
+                className="network-select"
+                value={selectedNetwork}
+                onChange={(e) => setSelectedNetwork(e.target.value as NetworkType)}
+              >
+                <option value="testnet">Testnet (Test Network)</option>
+                <option value="futurenet">Futurenet (Development)</option>
+                <option value="mainnet">Mainnet (Production)</option>
+              </select>
+              <div className="select-arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="button-section">
-            <Button
-              variant="primary"
-              size="lg"
+            <button
+              type="button"
               onClick={handleDeploy}
-              isLoading={status.isDeploying}
-              className="deploy-button"
+              className={`custom-deploy-button ${status.isDeploying ? 'loading' : ''}`}
+              disabled={status.isDeploying}
             >
-              {!walletKitPubKey ? 'Connect Wallet' : 'Deploy Contract'}
-            </Button>
+              {status.isDeploying ? (
+                <div className="loading-spinner" />
+              ) : (
+                <span>{!walletKitPubKey ? 'Connect Wallet' : 'Deploy Contract'}</span>
+              )}
+            </button>
           </div>
 
           {(status.error || status.contractId) && (
@@ -481,6 +491,58 @@ export default function DeployContractPage() {
         .deploy-button {
           width: 100%;
         }
+        
+        .custom-deploy-button {
+          width: 70%;
+          margin: 0 auto;
+          background-color: #2d7ff9;
+          border: none;
+          border-radius: 8px;
+          padding: 10px 20px;
+          font-size: 16px;
+          font-weight: 600;
+          color: white;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 46px;
+          text-transform: none;
+        }
+
+        .custom-deploy-button:hover {
+          background-color: #1a6eea;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-deploy-button:active {
+          transform: translateY(1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .custom-deploy-button:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        .loading-spinner {
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
 
         .status-box {
           display: flex;
@@ -546,6 +608,46 @@ export default function DeployContractPage() {
           font-size: 13px;
           overflow-x: auto;
           border: 1px solid #333;
+        }
+
+        .select-container {
+          position: relative;
+          width: 36%;
+        }
+        
+        .network-select {
+          width: 100%;
+          background-color:rgb(17, 16, 16);
+          color: white;
+          border: 1px solid #3a3a3a;
+          border-radius: 6px;
+          padding: 12px 16px;
+          padding-right: 40px;
+          font-size: 15px;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          cursor: pointer;
+          outline: none;
+        }
+        
+        .network-select:focus {
+          border-color: #4a4a4a;
+        }
+        
+        .network-select option {
+          background-color: #000000;
+          color: white;
+          padding: 8px;
+        }
+        
+        .select-arrow {
+          position: absolute;
+          top: 50%;
+          right: 12px;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: white;
         }
 
         @media (max-width: 900px) {
