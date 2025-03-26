@@ -2,15 +2,15 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
 import {
-  MemoType,
-  FeeBumpTransaction,
-  Transaction,
+  type MemoType,
+  type FeeBumpTransaction,
+  type Transaction,
   Networks,
 } from "@stellar/stellar-sdk";
 
 import { XDR_TYPE_TRANSACTION_ENVELOPE, NetworkOptions } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
-import {
+import type {
   AnyObject,
   EmptyObj,
   Network,

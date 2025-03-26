@@ -16,6 +16,7 @@ export const ConnectWallet = () => {
     console.log("Creating wallet button with network:", network.horizonUrl);
     try {
       await walletKitInstance.walletKit?.createButton({
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
         container: responseSuccessEl.current!,
         onConnect: ({ address }) => {
           console.log("Wallet connected with address:", address);
