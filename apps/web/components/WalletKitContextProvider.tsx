@@ -7,6 +7,7 @@ import {
   StellarWalletsKit,
   XBULL_ID,
   allowAllModules,
+  WalletNetwork,
 } from "@creit.tech/stellar-wallets-kit";
 
 import { getWalletKitNetwork } from "@/helpers/getWalletKitNetwork";
@@ -31,6 +32,8 @@ export const WalletKitContextProvider = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const savedTheme = localStorageSavedTheme.get();
+    console.log("WalletKitContextProvider initialized with network:", network);
+    console.log("Network type:", networkType);
 
     if (savedTheme) {
       setTheme(savedTheme);
@@ -40,6 +43,7 @@ export const WalletKitContextProvider = ({
   }, []);
 
   const walletKitInstance = useMemo(() => {
+    console.log("Creating WalletKit instance with network:", networkType);
     const isDarkTheme = theme === "sds-theme-dark";
 
     const commonDarkTheme = {
@@ -76,25 +80,33 @@ export const WalletKitContextProvider = ({
       notAvailableBorderColor: "#161616",
     };
 
-    return new StellarWalletsKit({
-      network: networkType,
-      selectedWalletId: XBULL_ID,
-      modules: allowAllModules(),
-      ...(theme && {
-        buttonTheme: isDarkTheme
-          ? {
-              ...commonDarkTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            }
-          : {
-              ...commonLightTheme,
-              buttonPadding: "0.5rem 1.25rem",
-              buttonBorderRadius: "0.5rem",
-            },
-        modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
-      }),
-    });
+    // Ensure we have a valid network, defaulting to TESTNET if not
+    const network = networkType || WalletNetwork.TESTNET;
+    
+    try {
+      return new StellarWalletsKit({
+        network,
+        selectedWalletId: XBULL_ID,
+        modules: allowAllModules(),
+        ...(theme && {
+          buttonTheme: isDarkTheme
+            ? {
+                ...commonDarkTheme,
+                buttonPadding: "0.5rem 1.25rem",
+                buttonBorderRadius: "0.5rem",
+              }
+            : {
+                ...commonLightTheme,
+                buttonPadding: "0.5rem 1.25rem",
+                buttonBorderRadius: "0.5rem",
+              },
+          modalTheme: isDarkTheme ? modalDarkTheme : modalLightTheme,
+        }),
+      });
+    } catch (error) {
+      console.error("Error creating StellarWalletsKit instance:", error);
+      return undefined;
+    }
   }, [networkType, theme]);
 
   return (

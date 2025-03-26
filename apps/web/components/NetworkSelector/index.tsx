@@ -262,7 +262,9 @@ export const NetworkSelector = () => {
         data-testid="networkSelector-button"
       >
         <NetworkIndicator networkId={network.id} networkLabel={network.label} />
-        <Icon.ChevronDown />
+        <div className="chevron-icon">
+          <Icon.ChevronDown />
+        </div>
       </button>
       <div
         className="NetworkSelector__floater Floater__content Floater__content--light"

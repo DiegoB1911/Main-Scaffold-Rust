@@ -1,4 +1,4 @@
-import { type JSXElementConstructor, type ReactElement, type ReactNode, type ReactPortal, useContext } from "react";
+import { useContext } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -12,7 +12,7 @@ import { useStore } from "@/store/useStore";
 
 import { MainNav } from "@/components/MainNav";
 import { WindowContext } from "@/components/layout/LayoutContextProvider";
-import { NetworkSelector } from "@/components/layout/NetworkSelector";
+import { NetworkSelector } from "@/components/NetworkSelector";
 import { Hydration } from "@/components/Hydration";
 import { Box } from "@/components/layout/Box";
 import { FloaterDropdown } from "@/components/FloaterDropdown";
@@ -83,9 +83,9 @@ export const LayoutHeader = () => {
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const rootItems = mainNav.subNav.filter((sn: any) => !sn.instruction);
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      const subSecs = mainNav.subNav.filter((sn: any) => (sn as any).instruction);
+      const subSecs = mainNav.subNav.filter((sn) => (sn as any).instruction);
 
-      const subItems = subSecs.map((ss: { navItems: { route: Routes; label: string; nestedItems?: { route: Routes; label: string; }[]; }[]; }) => {
+      const subItems = subSecs.map((ss) => {
         const items = ss.navItems as NavItem[];
         const hasNestedItems = Boolean(items[0]?.nestedItems?.length);
 
@@ -123,14 +123,12 @@ export const LayoutHeader = () => {
         {
           groupTitle: mainNav.label,
           options: rootItems
-            .map((ri: { navItems: { route: Routes; label: string; nestedItems?: { route: Routes; label: string; }[]; }[]; }) => formatNavItems(ri.navItems))
+            .map((ri) => formatNavItems(ri.navItems))
             // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-                        .reduce((r: any, c: any) => [...r, ...c], []),
+            .reduce((r, c) => [...r, ...c], []),
         },
         // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-                ...subItems.reduce((r: any, c: any) => [...r, ...c], []),
+        ...subItems.reduce((r, c) => [...r, ...c], []),
       ];
     }
 
@@ -138,10 +136,9 @@ export const LayoutHeader = () => {
       {
         groupTitle: mainNav.label,
         options: mainNav.subNav
-          .map((sn: { navItems: { route: Routes; label: string; nestedItems?: { route: Routes; label: string; }[]; }[]; }) => formatNavItems(sn.navItems))
+          .map((sn) => formatNavItems(sn.navItems))
           // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-                    .reduce((r: any, c: any) => [...r, ...c], []),
+          .reduce((r, c) => [...r, ...c], []),
       },
     ];
   });
@@ -163,8 +160,7 @@ export const LayoutHeader = () => {
 
         {flattenFormattedNav.map((fn, groupIdx) => (
           <optgroup key={`${fn.groupTitle}-${groupIdx}`} label={fn.groupTitle}>
-            {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
-            {fn.options.map((op: { value: string | number | readonly string[] | undefined; label: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
+            {fn.options.map((op) => (
               <option key={`${fn.groupTitle}-${op.value}`} value={op.value}>
                 {op.label}
               </option>

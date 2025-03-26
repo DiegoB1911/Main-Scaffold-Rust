@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { querystring } from "zustand-querystring";
-import type {
-  MemoType,
-  FeeBumpTransaction,
-  Transaction,
+import {
+  type MemoType,
+  type FeeBumpTransaction,
+  type Transaction,
+  Networks,
 } from "@stellar/stellar-sdk";
 
-import { XDR_TYPE_TRANSACTION_ENVELOPE } from "@/constants/settings";
+import { XDR_TYPE_TRANSACTION_ENVELOPE, NetworkOptions } from "@/constants/settings";
 import { sanitizeObject } from "@/helpers/sanitizeObject";
 import type {
   AnyObject,
@@ -206,13 +207,16 @@ interface CreateStoreOptions {
   url?: string;
 }
 
+// Default network to use if none is set
+const DEFAULT_NETWORK: Network = NetworkOptions[1]; // Testnet
+
 // Initial states
 const initEndpointState = {
-  network: {},
+  network: DEFAULT_NETWORK,
   currentEndpoint: undefined,
   params: {},
   saved: {
-    activeTab: "horizon",
+    activeTab: "endpoints",
   },
 };
 

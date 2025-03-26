@@ -1,11 +1,13 @@
 import type React from "react"
 import { Inter } from "next/font/google"
-
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { WalletKitContextProvider } from "@/components/WalletKitContextProvider"
 import { StoreProvider } from "@/store/StoreProvider"
+import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider"
+import { QueryProvider } from "@/query/QueryProvider"
 import "@/app/globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -26,21 +28,21 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <StoreProvider>
-            <WalletKitContextProvider>
-              <LayoutContextProvider>
-                <div className="relative flex min-h-screen flex-col">
-                  <SiteHeader />
-                  <main className="flex-1">{children}</main>
-                  <SiteFooter />
-                </div>
-              </LayoutContextProvider>
-            </WalletKitContextProvider>
+            <QueryProvider>
+              <WalletKitContextProvider>
+                <LayoutContextProvider>
+                  <div className="relative flex min-h-screen flex-col">
+                    <SiteHeader />
+                    <main className="flex-1">{children}</main>
+                    <SiteFooter />
+                  </div>
+                </LayoutContextProvider>
+              </WalletKitContextProvider>
+            </QueryProvider>
           </StoreProvider>
         </ThemeProvider>
+        <GoogleAnalytics gaId="G-7S99TQ46SJ" />
       </body>
     </html>
   )
 }
-
-import './globals.css'
-import { LayoutContextProvider } from "@/components/layout/LayoutContextProvider"
