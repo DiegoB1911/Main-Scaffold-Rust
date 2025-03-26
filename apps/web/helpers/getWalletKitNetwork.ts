@@ -5,7 +5,8 @@ import { WalletNetwork } from "@creit.tech/stellar-wallets-kit";
 export const getWalletKitNetwork = (network: NetworkType) => {
   console.log("getWalletKitNetwork called with:", network);
   
-  let result;
+  // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
+    let result;
   switch (network) {
     case "testnet":
       result = WalletNetwork.TESTNET;
