@@ -13,22 +13,29 @@ export const ConnectWallet = () => {
   const walletKitInstance = useContext(WalletKitContext);
 
   const createWalletKitButton = async () => {
-    await walletKitInstance.walletKit?.createButton({
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
-      container: responseSuccessEl.current!,
-      onConnect: ({ address }) => {
-        updateWalletKitPubKey(address);
-      },
-      onDisconnect: () => {
-        updateWalletKitPubKey(undefined);
-      },
-      horizonUrl: network.horizonUrl || "",
-    });
+    console.log("Creating wallet button with network:", network.horizonUrl);
+    try {
+      await walletKitInstance.walletKit?.createButton({
+        container: responseSuccessEl.current!,
+        onConnect: ({ address }) => {
+          console.log("Wallet connected with address:", address);
+          updateWalletKitPubKey(address);
+        },
+        onDisconnect: () => {
+          console.log("Wallet disconnected");
+          updateWalletKitPubKey(undefined);
+        },
+        horizonUrl: network.horizonUrl || "",
+      });
+    } catch (error) {
+      console.error("Error creating wallet button:", error);
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const initButton = async () => {
+      console.log("Initializing wallet button");
       await createWalletKitButton();
     };
 
@@ -37,6 +44,7 @@ export const ConnectWallet = () => {
     }
 
     return () => {
+      console.log("Removing wallet button");
       walletKitInstance.walletKit?.removeButton({ skipDisconnect: true });
     };
     // Run only when component mounts

@@ -98,12 +98,41 @@ export async function POST(req: Request) {
         console.log('Sending create contract transaction...');
         console.log('Signed XDR:', signedCreateTx);
         const signedCreateXDR = typeof signedCreateTx === 'string' ? signedCreateTx : signedCreateTx.signedTxXdr;
-        const createTransaction = StellarSDK.TransactionBuilder.fromXDR(signedCreateXDR, networkPassphrase);
-        const createResponse = await server.sendTransaction(createTransaction);
-        console.log('Create contract response:', createResponse);
+        
+        // Declarar la variable createResponse y hash fuera del bloque try/catch
+        let transactionHash: string;
+        let usingHorizon = false;
 
-        if (createResponse.status !== 'PENDING') {
-          throw new Error(`Create contract transaction failed with status: ${createResponse.status}`);
+        // Usamos una estrategia diferente: convertir la transacción a un objeto Transaction
+        // pero capturamos cualquier error y continuamos con un enfoque directo si falla
+        try {
+          const createTransaction = StellarSDK.TransactionBuilder.fromXDR(signedCreateXDR, networkPassphrase);
+          const rpcResponse = await server.sendTransaction(createTransaction);
+          console.log('Create contract response (RPC):', rpcResponse);
+          
+          if (rpcResponse.status !== 'PENDING') {
+            throw new Error(`Create contract transaction failed with status: ${rpcResponse.status}`);
+          }
+          
+          transactionHash = rpcResponse.hash;
+        } catch (parseError) {
+          console.warn('Error parsing XDR, attempting to send raw XDR:', parseError);
+          
+          // Fallback: Intentamos enviar la transacción directamente al servidor Horizon
+          usingHorizon = true;
+          const horizonServerUrl = network === 'testnet' 
+            ? 'https://horizon-testnet.stellar.org' 
+            : 'https://horizon-futurenet.stellar.org';
+          
+          const horizonServer = new StellarSDK.Horizon.Server(horizonServerUrl);
+          const horizonResponse = await horizonServer.submitTransaction(signedCreateXDR);
+          console.log('Create contract response (Horizon):', horizonResponse);
+          
+          if (!horizonResponse.successful) {
+            throw new Error(`Create contract transaction failed: ${horizonResponse.result_xdr}`);
+          }
+          
+          transactionHash = horizonResponse.hash;
         }
 
         // Wait for create transaction to complete
@@ -114,13 +143,23 @@ export async function POST(req: Request) {
 
         while (attempts < maxAttempts) {
           console.log(`Checking create transaction status (attempt ${attempts + 1}/${maxAttempts})...`);
-          createResult = await server.getTransaction(createResponse.hash);
-          
-          if (createResult.status === 'SUCCESS') {
-            break;
-          // biome-ignore lint/style/noUselessElse: <explanation>
-          } else if (createResult.status !== 'NOT_FOUND') {
-            throw new Error(`Create transaction failed with status: ${createResult.status}`);
+          try {
+            if (usingHorizon) {
+              // Si estamos usando Horizon, necesitamos esperar y luego verificar con RPC
+              await sleep(3000);
+              createResult = await server.getTransaction(transactionHash);
+            } else {
+              createResult = await server.getTransaction(transactionHash);
+            }
+            
+            if (createResult.status === 'SUCCESS') {
+              break;
+            // biome-ignore lint/style/noUselessElse: <explanation>
+            } else if (createResult.status !== 'NOT_FOUND') {
+              throw new Error(`Create transaction failed with status: ${createResult.status}`);
+            }
+          } catch (error) {
+            console.log('Error checking transaction status, retrying...', error);
           }
           
           await sleep(3000);

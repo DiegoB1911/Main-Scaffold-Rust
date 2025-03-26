@@ -3,16 +3,26 @@ import type { NetworkType } from "@/types/types";
 import { WalletNetwork } from "@creit.tech/stellar-wallets-kit";
 
 export const getWalletKitNetwork = (network: NetworkType) => {
+  console.log("getWalletKitNetwork called with:", network);
+  
+  let result;
   switch (network) {
     case "testnet":
-      return WalletNetwork.TESTNET;
+      result = WalletNetwork.TESTNET;
+      break;
     case "mainnet":
-      return WalletNetwork.PUBLIC;
+      result = WalletNetwork.PUBLIC;
+      break;
     case "futurenet":
-      return WalletNetwork.FUTURENET;
+      result = WalletNetwork.FUTURENET;
+      break;
     // @TODO: stellar wallets kit doesn't support CUSTOM
     //   case "custom":
     default:
-      return WalletNetwork.TESTNET;
+      result = WalletNetwork.TESTNET;
+      break;
   }
+  
+  console.log("getWalletKitNetwork returning:", result);
+  return result;
 };
